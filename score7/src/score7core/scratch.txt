@@ -1,0 +1,41 @@
+Example program flow
+
+Score7Core game = new Score7Core();
+
+game.addPlayer("Alice");
+game.addPlayer("Bob");
+game.addPlayer("Steve");
+
+game.addCard("Alice", Cards.TWO);
+game.addCard("Bob", Cards.NINE);
+game.addCard("Steve", Cards.FIVE);
+game.addCard("Alice", Cards.TWO); // alice should now bust (her score for the ROUND) is 0
+game.addCard("Bob", Cards.FIVE);
+game.addCard("Steve", Cards.SIX);
+game.action("Bob", Action.STAY); // bob is out and safe for the round, keeping his score
+game.addCard("Steve", Cards.ONE);
+game.action("Steve", Action.STAY);
+
+now the round should increment and we do it all again. Of course
+in a real program this would be in a event loop calling these action from user input.
+
+Things the program needs:
+- Players
+    - Name
+    - Score
+    - Score History?
+    - Card History?
+- Cards
+- State Machine
+    - The main Flip7Core class
+    - Controls the flow of the game
+    - Prevents illegal moves
+    - The only class other than enums that
+        the library user interacts with
+
+Questions:
+- How are special cards like flip 3 handled?
+    - I presume it is just logged as a card.
+        Since the state machine is not responsible for playing the game
+        the user tells it when someone busts. So all cards are logged but only cards
+        that effect score really matter to this program. Everything else it just data.
