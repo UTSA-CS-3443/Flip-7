@@ -1,0 +1,311 @@
+@startuml Flip7
+title Flip 7 Score Tracker - JavaFX Design
+skinparam classAttributeIconSize 0
+skinparam linetype ortho
+skinparam packageStyle rectangle
+hide empty members
+
+package "score7" {
+    package "model" {
+        class Flip7Core {
+            +{static} DEFAULT_TARGET_SCORE : int = 200
+            +{static} DEFAULT_FLIP_7_SIZE : int = 7
+            +{static} DEFAULT_FLIP_7_BONUS : int = 15
+            -players : List<Player>
+            -targetScore : int
+            -flip7Size : int
+            -flip7Bonus : int
+            -round : int
+            -winner : Player
+            --
+            +Flip7Core()
+            +Flip7Core(targetScore : int)
+            +Flip7Core(targetScore : int, flip7Size : int, flip7Bonus : int)
+            +addPlayer(name : String)
+            +addCard(name : String, card : Cards) : CardResult
+            +stay(name : String)
+            +bust(name : String)
+            +action(name : String, action : Action)
+            +getPlayers() : List<Player>
+            +getPlayer(name : String) : Player
+            +getRound() : int
+            +getTargetScore() : int
+            +getFlip7Size() : int
+            +getFlip7Bonus() : int
+            +isGameOver() : boolean
+            +getWinner() : Optional<Player>
+            -findPlayer(name : String) : Player
+            -activePlayer(name : String) : Player
+            -requireGameInProgress()
+            -roundHasActivity() : boolean
+            -endRoundIfOver()
+            -finishRound()
+            -findWinner() : Player
+        }
+
+        class Action <<enumeration>> {
+            STAY
+            BUST
+        }
+
+        class CardResult <<enumeration>> {
+            ADDED
+            SECOND_CHANCE_USED
+            BUSTED
+            FROZEN
+            FLIP_7
+        }
+
+        class Cards <<enumeration>> {
+            ZERO ... TWELVE
+            XTWO
+            PTWO
+            PFOUR
+            PSIX
+            PEIGHT
+            PTEN
+            FLIP_THREE
+            FREEZE
+            SECOND_CHANCE
+            --
+            -value : int
+            -kind : Kind
+            --
+            +getValue() : int
+            +getKind() : Kind
+            +isNumber() : boolean
+        }
+
+        class "Cards.Kind" as Kind <<enumeration>> {
+            NUMBER
+            MULTIPLIER
+            BONUS
+            ACTION
+        }
+
+        class Player {
+            -name : String
+            -score : int
+            -status : Status
+            -flip7Size : int
+            -flip7Bonus : int
+            -hand : List<Cards>
+            -scoreHistory : List<Integer>
+            -cardHistory : List<List<Cards>>
+            --
+            ~Player(name : String, flip7Size : int, flip7Bonus : int)
+            +getName() : String
+            +getScore() : int
+            +getStatus() : Status
+            +getHand() : List<Cards>
+            +getScoreHistory() : List<Integer>
+            +getCardHistory() : List<List<Cards>>
+            +getRoundScore() : int
+            ~hasCard(card : Cards) : boolean
+            ~hasFlip7() : boolean
+            ~addToHand(card : Cards)
+            ~consumeSecondChance() : boolean
+            ~stay()
+            ~bust()
+            ~isActive() : boolean
+            ~hasActivity() : boolean
+            ~finishRound()
+        }
+
+        class "Player.Status" as Status <<enumeration>> {
+            ACTIVE
+            STAYED
+            BUSTED
+        }
+
+        class GameRecord {
+            -timestamp : LocalDateTime
+            -winnerName : String
+            -rounds : int
+            -finalScores : Map<String, Integer>
+            --
+            +GameRecord(timestamp, winnerName, rounds, finalScores)
+            +{static} fromGame(game : Flip7Core) : GameRecord
+            +{static} fromLine(line : String) : GameRecord
+            +toLine() : String
+            +getTimestamp() : LocalDateTime
+            +getWinnerName() : String
+            +getRounds() : int
+            +getFinalScores() : Map<String, Integer>
+        }
+
+        interface GameRecordRepository {
+            +save(record : GameRecord)
+            +loadAll() : List<GameRecord>
+            +delete(index : int)
+            +deleteAll()
+        }
+
+        class FileGameRecordRepository {
+            -file : Path
+            --
+            +FileGameRecordRepository(file : Path)
+            +save(record : GameRecord)
+            +loadAll() : List<GameRecord>
+            +delete(index : int)
+            +deleteAll()
+            -sanitize(name : String) : String
+        }
+    }
+
+    package "main" {
+        class Launcher <<extends Application>> {
+            +start(stage : Stage)
+            +{static} main(args : String[])
+        }
+    }
+
+    package "controllers" {
+        class SceneNavigator {
+            -stage : Stage
+            -currentGame : Flip7Core
+            -repository : GameRecordRepository
+            --
+            +SceneNavigator(stage : Stage, repository : GameRecordRepository)
+            +showMainMenu()
+            +showAddPlayers()
+            +showGame()
+            +showHistory()
+            +startGame(game : Flip7Core)
+            +getCurrentGame() : Flip7Core
+            +getRepository() : GameRecordRepository
+            -load(fxml : String) : Parent
+        }
+
+        abstract class BaseController {
+            #navigator : SceneNavigator
+            --
+            +setNavigator(navigator : SceneNavigator)
+            +{abstract} onShow()
+            #showError(message : String)
+        }
+
+        class MainMenuController {
+            -newGameButton : Button
+            -historyButton : Button
+            -quitButton : Button
+            --
+            +onShow()
+            -onNewGame()
+            -onViewHistory()
+            -onQuit()
+        }
+
+        class AddPlayersController {
+            -nameField : TextField
+            -playerListView : ListView<String>
+            -addButton : Button
+            -removeButton : Button
+            -startButton : Button
+            -pendingNames : List<String>
+            --
+            +onShow()
+            -onAddPlayer()
+            -onRemovePlayer()
+            -onStartGame()
+            -onBack()
+        }
+
+        class GameController {
+            -roundLabel : Label
+            -targetLabel : Label
+            -playerPane : FlowPane
+            -selectedPlayerLabel : Label
+            -handPane : FlowPane
+            -roundScoreLabel : Label
+            -cardButtons : GridPane
+            -stayButton : Button
+            -bustButton : Button
+            -statusLabel : Label
+            -selectedPlayer : Player
+            --
+            +onShow()
+            -onPlayerClicked(player : Player)
+            -onCardClicked(card : Cards)
+            -onStay()
+            -onBust()
+            -refreshPlayers()
+            -refreshHand()
+            -handleResult(result : CardResult)
+            -checkGameOver()
+        }
+
+        class GameHistoryController {
+            -recordTable : TableView<GameRecord>
+            -timestampColumn : TableColumn
+            -winnerColumn : TableColumn
+            -roundsColumn : TableColumn
+            -scoresColumn : TableColumn
+            -deleteButton : Button
+            -deleteAllButton : Button
+            -backButton : Button
+            --
+            +onShow()
+            -onDeleteSelected()
+            -onDeleteAll()
+            -onBack()
+            -reload()
+        }
+    }
+
+    package "fxml" {
+        class "main-menu-view.fxml" as MainMenuView <<FXML>>
+        class "add-players-view.fxml" as AddPlayersView <<FXML>>
+        class "game-view.fxml" as GameView <<FXML>>
+        class "game-history-view.fxml" as HistoryView <<FXML>>
+    }
+}
+
+' ---- model relationships ----
+Flip7Core "1" *-- "1..*" Player : players
+Flip7Core "1" o-- "0..1" Player : winner
+Flip7Core ..> Cards
+Flip7Core ..> CardResult : returns
+Flip7Core ..> Action
+Player "1" o-- "*" Cards : hand
+Player --> Status
+Cards --> Kind
+
+GameRecordRepository <|.. FileGameRecordRepository
+GameRecordRepository ..> GameRecord
+GameRecord ..> Flip7Core : built from
+
+' ---- launcher ----
+Launcher --> SceneNavigator : creates
+Launcher ..> FileGameRecordRepository : creates
+
+' ---- controllers ----
+BaseController <|-- MainMenuController
+BaseController <|-- AddPlayersController
+BaseController <|-- GameController
+BaseController <|-- GameHistoryController
+BaseController "*" --> "1" SceneNavigator
+
+SceneNavigator --> Flip7Core : currentGame
+SceneNavigator --> GameRecordRepository
+SceneNavigator ..> MainMenuView : loads
+SceneNavigator ..> AddPlayersView : loads
+SceneNavigator ..> GameView : loads
+SceneNavigator ..> HistoryView : loads
+
+AddPlayersController ..> Flip7Core : creates / addPlayer()
+GameController ..> Flip7Core : addCard / stay / bust
+GameController ..> Player
+GameController ..> Cards
+GameController ..> CardResult
+GameController ..> GameRecordRepository : save on game over
+GameHistoryController ..> GameRecordRepository
+GameHistoryController ..> GameRecord
+
+' ---- views ----
+MainMenuView ..> MainMenuController : fx:controller
+AddPlayersView ..> AddPlayersController : fx:controller
+GameView ..> GameController : fx:controller
+HistoryView ..> GameHistoryController : fx:controller
+
+@enduml
