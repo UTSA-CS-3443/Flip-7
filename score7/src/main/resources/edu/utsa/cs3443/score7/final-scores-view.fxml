@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" styleClass="screen"
+           fx:controller="edu.utsa.cs3443.score7.controllers.FinalScoresController">
+    <BorderPane styleClass="screen-content">
+        <top>
+            <VBox alignment="CENTER" spacing="2">
+                <padding>
+                    <Insets top="16" bottom="12"/>
+                </padding>
+                <Label text="Final Scores" styleClass="title"/>
+                <Label fx:id="winnerLabel" styleClass="subtitle"/>
+                <Label fx:id="errorLabel" styleClass="error-label"/>
+            </VBox>
+        </top>
+        <center>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                <VBox fx:id="scoreList" alignment="TOP_CENTER" spacing="10">
+                    <padding>
+                        <Insets top="4" bottom="4"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </center>
+        <bottom>
+            <VBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <Button text="Start new game" styleClass="pill-button" onAction="#onNewGame"/>
+                <Button text="Exit" styleClass="pill-button" onAction="#onExit"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
+</StackPane>

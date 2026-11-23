@@ -1,4 +1,4 @@
-package score7core;
+package edu.utsa.cs3443.score7.score7core;
 
 /** Things a player can do that end their participation in the round. */
 public enum Action {

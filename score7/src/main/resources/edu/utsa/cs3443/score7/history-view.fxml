@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" styleClass="screen"
+           fx:controller="edu.utsa.cs3443.score7.controllers.HistoryController">
+    <BorderPane styleClass="screen-content">
+        <top>
+            <VBox alignment="CENTER" spacing="4">
+                <padding>
+                    <Insets top="16" bottom="12"/>
+                </padding>
+                <Label text="History" styleClass="title"/>
+                <Label fx:id="errorLabel" styleClass="error-label"/>
+            </VBox>
+        </top>
+        <center>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                <VBox fx:id="gameList" alignment="TOP_CENTER" spacing="10">
+                    <padding>
+                        <Insets top="4" bottom="4"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </center>
+        <bottom>
+            <VBox alignment="CENTER">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <Button text="Back" styleClass="pill-button" onAction="#onBack"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
+
+    <StackPane fx:id="overlay" styleClass="overlay-bg" visible="false">
+        <VBox styleClass="dialog" alignment="CENTER" spacing="10" maxWidth="260" maxHeight="-Infinity">
+            <Label fx:id="detailTitle" styleClass="dialog-title"/>
+            <Label fx:id="detailText" styleClass="dialog-text"/>
+            <Label text="Are You Sure You Want to Delete This Game?" styleClass="dialog-title"/>
+            <Button text="Delete" styleClass="pill-button, small-pill" onAction="#onConfirmDelete"/>
+            <Button text="Back" styleClass="pill-button, small-pill" onAction="#onCancelDelete"/>
+        </VBox>
+    </StackPane>
+</StackPane>

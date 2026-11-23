@@ -1,4 +1,4 @@
-package score7core;
+package edu.utsa.cs3443.score7.score7core;
 
 /**
  * Every card in Flip 7 that this library cares about.

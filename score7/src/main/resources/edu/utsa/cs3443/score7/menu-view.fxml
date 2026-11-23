@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" styleClass="screen"
+           fx:controller="edu.utsa.cs3443.score7.controllers.MenuController">
+    <VBox alignment="CENTER" spacing="16" styleClass="screen-content">
+        <HBox alignment="CENTER" spacing="6">
+            <Label text="F" styleClass="logo-tile" rotate="-4"/>
+            <Label text="L" styleClass="logo-tile" rotate="3"/>
+            <Label text="I" styleClass="logo-tile" rotate="-2"/>
+            <Label text="P" styleClass="logo-tile" rotate="4"/>
+            <Region prefWidth="8"/>
+            <Label text="7" styleClass="logo-tile, logo-seven" rotate="-6"/>
+        </HBox>
+        <Label text="Score Tracker" styleClass="subtitle"/>
+        <Region prefHeight="140"/>
+        <Button text="Play" styleClass="pill-button" onAction="#onPlay"/>
+        <Button text="History" styleClass="pill-button" onAction="#onHistory"/>
+    </VBox>
+</StackPane>

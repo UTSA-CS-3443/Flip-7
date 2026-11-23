@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" styleClass="screen"
+           fx:controller="edu.utsa.cs3443.score7.controllers.ScoreTrackerController">
+    <BorderPane styleClass="screen-content">
+        <top>
+            <VBox alignment="CENTER" spacing="2">
+                <padding>
+                    <Insets top="16" bottom="12"/>
+                </padding>
+                <Label text="Score Tracker" styleClass="title"/>
+                <Label fx:id="roundLabel" styleClass="subtitle"/>
+            </VBox>
+        </top>
+        <center>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                <VBox fx:id="playerList" alignment="TOP_CENTER" spacing="10">
+                    <padding>
+                        <Insets top="4" bottom="4"/>
+                    </padding>
+                </VBox>
+            </ScrollPane>
+        </center>
+        <bottom>
+            <VBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <Label text="Tap a player to enter their cards. Scores are only banked when you press Next Round."
+                       styleClass="hint-label" maxWidth="280"/>
+                <Button text="Next Round" styleClass="pill-button" onAction="#onNextRound"/>
+                <Button text="End Game" styleClass="pill-button" onAction="#onEndGame"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
+
+    <StackPane fx:id="overlay" styleClass="overlay-bg" visible="false">
+        <VBox styleClass="dialog" alignment="CENTER" spacing="10" maxWidth="260" maxHeight="-Infinity">
+            <Label fx:id="dialogTitle" styleClass="dialog-title"/>
+            <Label fx:id="dialogText" styleClass="dialog-text"/>
+            <Button fx:id="confirmButton" styleClass="pill-button, small-pill" onAction="#onConfirm"/>
+            <Button text="Back" styleClass="pill-button, small-pill" onAction="#onCancel"/>
+        </VBox>
+    </StackPane>
+</StackPane>

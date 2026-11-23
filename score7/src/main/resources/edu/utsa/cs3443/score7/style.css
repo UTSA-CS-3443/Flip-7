@@ -1,0 +1,327 @@
+/* Flip 7 score tracker - dark navy theme with gold pill buttons */
+
+.screen {
+    -fx-background-color: radial-gradient(center 50% 35%, radius 85%, #164a8a 0%, #0a2550 45%, #031130 100%);
+    -fx-font-family: "Segoe UI", "Arial", sans-serif;
+}
+
+.screen-content {
+    -fx-padding: 12 16 20 16;
+}
+
+/* ---- text ---- */
+
+.title {
+    -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.subtitle {
+    -fx-text-fill: #8fc1f0;
+    -fx-font-size: 12px;
+}
+
+.error-label {
+    -fx-text-fill: #ff8a8a;
+    -fx-font-size: 12px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.hint-label {
+    -fx-text-fill: #8fc1f0;
+    -fx-font-size: 11px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* ---- logo ---- */
+
+.logo-tile {
+    -fx-background-color: linear-gradient(to bottom, #20375e, #0b1730);
+    -fx-background-radius: 6;
+    -fx-border-color: #3c5a8a;
+    -fx-border-radius: 6;
+    -fx-border-width: 1.5;
+    -fx-text-fill: white;
+    -fx-font-family: "Arial Black", "Segoe UI Black", sans-serif;
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-alignment: center;
+    -fx-min-width: 48;
+    -fx-min-height: 58;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.6), 8, 0, 0, 3);
+}
+
+.logo-seven {
+    -fx-background-color: linear-gradient(to bottom, #ffe37a, #f59e0b);
+    -fx-text-fill: #0b1730;
+}
+
+/* ---- buttons ---- */
+
+.pill-button {
+    -fx-background-color: #8a5200, linear-gradient(to bottom, #ffe680 0%, #ffc61a 50%, #f59e0b 100%);
+    -fx-background-insets: 0 0 -2 0, 0;
+    -fx-background-radius: 20;
+    -fx-text-fill: #1c1405;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 230;
+    -fx-pref-height: 38;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 6, 0, 0, 2);
+}
+
+.pill-button:hover {
+    -fx-background-color: #8a5200, linear-gradient(to bottom, #fff0a8 0%, #ffd23f 50%, #f7a920 100%);
+}
+
+.pill-button:pressed {
+    -fx-background-color: #8a5200, linear-gradient(to bottom, #f5b400 0%, #f59e0b 100%);
+    -fx-translate-y: 1;
+}
+
+.pill-button:disabled {
+    -fx-opacity: 0.45;
+}
+
+.small-pill {
+    -fx-pref-width: 150;
+    -fx-pref-height: 30;
+    -fx-font-size: 13px;
+}
+
+.header-button {
+    -fx-background-color: linear-gradient(to bottom, #ffe680, #f59e0b);
+    -fx-background-radius: 12;
+    -fx-text-fill: #1c1405;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-padding: 3 12 3 12;
+    -fx-cursor: hand;
+}
+
+.header-button:pressed {
+    -fx-translate-y: 1;
+}
+
+.icon-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #8fc1f0;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 2 6 2 6;
+}
+
+.icon-button:hover {
+    -fx-text-fill: #ff8a8a;
+}
+
+/* ---- name boxes (player rows, text fields, history rows) ---- */
+
+.name-box {
+    -fx-background-color: rgba(4, 18, 42, 0.85);
+    -fx-background-radius: 8;
+    -fx-border-color: #4fa3e0;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 240;
+    -fx-min-height: 42;
+    -fx-alignment: center;
+}
+
+.text-field.name-box {
+    -fx-prompt-text-fill: #5f7fa6;
+    -fx-highlight-fill: #4fa3e0;
+}
+
+.text-field.name-box:focused {
+    -fx-border-color: #ffd23f;
+}
+
+.button.name-box {
+    -fx-cursor: hand;
+    -fx-padding: 4 12 4 12;
+}
+
+.button.name-box:hover {
+    -fx-border-color: #8fd0ff;
+}
+
+.button.name-box:pressed {
+    -fx-background-color: rgba(20, 50, 95, 0.9);
+}
+
+.row-name {
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.row-status {
+    -fx-text-fill: #8fc1f0;
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+}
+
+.status-bust {
+    -fx-text-fill: #ff6b6b;
+}
+
+.status-frozen {
+    -fx-text-fill: #7fd4ff;
+}
+
+.status-flip7 {
+    -fx-text-fill: #5dff8f;
+}
+
+.row-date {
+    -fx-text-fill: #cfe3ff;
+    -fx-font-size: 10px;
+}
+
+.winner-row {
+    -fx-border-color: #ffd23f;
+}
+
+/* ---- scoring cards ---- */
+
+.card {
+    -fx-background-color: #6b5a2e, linear-gradient(to bottom, #fffaf0, #f3e4b8);
+    -fx-background-insets: 0, 3;
+    -fx-background-radius: 8, 6;
+    -fx-pref-width: 70;
+    -fx-pref-height: 80;
+    -fx-font-family: "Arial Black", "Segoe UI Black", sans-serif;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 5, 0, 0, 2);
+}
+
+.card-modifier {
+    -fx-background-color: #8a4b00, linear-gradient(to bottom, #ffd27a, #f59e0b);
+    -fx-text-fill: #fffaf0;
+    -fx-font-size: 22px;
+}
+
+.card-multiplier {
+    -fx-background-color: #8a4b00, linear-gradient(to bottom, #fff2a8, #ffc61a);
+    -fx-text-fill: #c2410c;
+    -fx-font-size: 22px;
+}
+
+.card:selected {
+    -fx-background-color: #3cff7a, linear-gradient(to bottom, #fffaf0, #f3e4b8);
+    -fx-background-insets: 0, 4;
+    -fx-effect: dropshadow(gaussian, #3cff7a, 12, 0.3, 0, 0);
+}
+
+.card-modifier:selected, .card-multiplier:selected {
+    -fx-background-color: #3cff7a, linear-gradient(to bottom, #ffd27a, #f59e0b);
+}
+
+.card:disabled {
+    -fx-opacity: 0.35;
+}
+
+.flip7-badge {
+    -fx-text-fill: #5dff8f;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* ---- bust / freeze toggles ---- */
+
+.status-toggle {
+    -fx-background-color: rgba(4, 18, 42, 0.85);
+    -fx-background-radius: 18;
+    -fx-border-radius: 18;
+    -fx-border-width: 2;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-pref-width: 120;
+    -fx-pref-height: 36;
+    -fx-cursor: hand;
+}
+
+.bust-toggle {
+    -fx-border-color: #ff6b6b;
+    -fx-text-fill: #ff6b6b;
+}
+
+.bust-toggle:selected {
+    -fx-background-color: #e03131;
+    -fx-text-fill: white;
+}
+
+.freeze-toggle {
+    -fx-border-color: #7fd4ff;
+    -fx-text-fill: #7fd4ff;
+}
+
+.freeze-toggle:selected {
+    -fx-background-color: #1c7ed6;
+    -fx-text-fill: white;
+}
+
+/* ---- confirmation overlay ---- */
+
+.overlay-bg {
+    -fx-background-color: rgba(0, 0, 0, 0.6);
+}
+
+.dialog {
+    -fx-background-color: #0a2350;
+    -fx-background-radius: 10;
+    -fx-border-color: #4fa3e0;
+    -fx-border-width: 2;
+    -fx-border-radius: 10;
+    -fx-padding: 14;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.7), 16, 0, 0, 4);
+}
+
+.dialog-title {
+    -fx-text-fill: white;
+    -fx-font-size: 15px;
+    -fx-font-weight: bold;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+.dialog-text {
+    -fx-text-fill: #cfe3ff;
+    -fx-font-size: 13px;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* ---- scroll panes ---- */
+
+.scroll-pane, .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-bar:vertical {
+    -fx-background-color: transparent;
+    -fx-pref-width: 6;
+}
+
+.scroll-bar:vertical .thumb {
+    -fx-background-color: #2f6fae;
+    -fx-background-radius: 3;
+}
+
+.scroll-bar .increment-button, .scroll-bar .decrement-button,
+.scroll-bar .increment-arrow, .scroll-bar .decrement-arrow {
+    -fx-padding: 0;
+    -fx-shape: "";
+}

@@ -1,4 +1,4 @@
-package score7core;
+package edu.utsa.cs3443.score7.score7core;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -60,6 +60,17 @@ public class Player {
         return Collections.unmodifiableList(cardHistory);
     }
 
+    /** True if the current hand holds enough unique number cards for a Flip 7. */
+    public boolean hasFlip7() {
+        Set<Cards> unique = EnumSet.noneOf(Cards.class);
+        for (Cards c : hand) {
+            if (c.isNumber()) {
+                unique.add(c);
+            }
+        }
+        return unique.size() >= flip7Size;
+    }
+
     /**
      * What this player would score if the round ended now: 0 if busted,
      * otherwise number total, doubled by XTWO, plus P bonuses, plus the Flip 7 bonus.
@@ -95,18 +106,12 @@ public class Player {
         return hand.contains(card);
     }
 
-    boolean hasFlip7() {
-        Set<Cards> unique = EnumSet.noneOf(Cards.class);
-        for (Cards c : hand) {
-            if (c.isNumber()) {
-                unique.add(c);
-            }
-        }
-        return unique.size() >= flip7Size;
-    }
-
     void addToHand(Cards card) {
         hand.add(card);
+    }
+
+    boolean removeFromHand(Cards card) {
+        return hand.remove(card);
     }
 
     /** Removes a SECOND_CHANCE from the hand if there is one. */
@@ -120,6 +125,10 @@ public class Player {
 
     void bust() {
         status = Status.BUSTED;
+    }
+
+    void reopen() {
+        status = Status.ACTIVE;
     }
 
     boolean isActive() {

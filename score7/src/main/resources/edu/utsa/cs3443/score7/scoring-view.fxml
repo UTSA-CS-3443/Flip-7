@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" styleClass="screen"
+           fx:controller="edu.utsa.cs3443.score7.controllers.ScoringController">
+    <BorderPane styleClass="screen-content">
+        <top>
+            <VBox alignment="CENTER" spacing="2">
+                <padding>
+                    <Insets top="4" bottom="8"/>
+                </padding>
+                <Label fx:id="nameLabel" styleClass="title"/>
+                <Label fx:id="scoreLabel" styleClass="subtitle"/>
+                <Label fx:id="flip7Label" text="FLIP 7!" styleClass="flip7-badge" visible="false" managed="false"/>
+                <Label fx:id="errorLabel" styleClass="error-label"/>
+            </VBox>
+        </top>
+        <center>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER">
+                <GridPane fx:id="cardGrid" alignment="CENTER" hgap="8" vgap="8">
+                    <padding>
+                        <Insets top="4" bottom="4"/>
+                    </padding>
+                </GridPane>
+            </ScrollPane>
+        </center>
+        <bottom>
+            <VBox alignment="CENTER" spacing="10">
+                <padding>
+                    <Insets top="10"/>
+                </padding>
+                <HBox alignment="CENTER" spacing="12">
+                    <ToggleButton fx:id="bustToggle" text="Bust" styleClass="status-toggle, bust-toggle"
+                                  onAction="#onBust"/>
+                    <ToggleButton fx:id="freezeToggle" text="Freeze" styleClass="status-toggle, freeze-toggle"
+                                  onAction="#onFreeze"/>
+                </HBox>
+                <Button text="Done" styleClass="pill-button" onAction="#onDone"/>
+            </VBox>
+        </bottom>
+    </BorderPane>
+</StackPane>

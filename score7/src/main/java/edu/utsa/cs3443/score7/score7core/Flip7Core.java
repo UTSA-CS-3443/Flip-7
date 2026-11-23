@@ -1,4 +1,4 @@
-package score7core;
+package edu.utsa.cs3443.score7.score7core;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,10 +9,14 @@ import java.util.Optional;
  * Score tracker / state machine for Flip 7. It does not play the game; the caller
  * reports what happened and this class keeps score and rejects illegal moves.
  *
- * A round ends automatically when no player is still active, or when someone
- * collects seven unique number cards. The game ends when at least one player has
- * reached the target score and a single player holds the highest score (a tie at
- * the top plays on).
+ * Rounds never advance on their own. Players stay, bust or reach Flip 7, but nothing
+ * is banked until the caller invokes {@link #nextRound()}. Until then a player's hand
+ * can be corrected with {@link #removeCard} and a stay/bust can be undone with
+ * {@link #reopen}. This keeps a mistaken entry from being banked.
+ *
+ * The game ends after {@link #nextRound()} when at least one player has reached the
+ * target score and a single player holds the highest score (a tie at the top plays on),
+ * or immediately when {@link #endGame()} is called.
  */
 public class Flip7Core {
 
@@ -26,6 +30,7 @@ public class Flip7Core {
     private final int flip7Bonus;
     private int round = 1;
     private Player winner;
+    private boolean gameOver;
 
     public Flip7Core() {
         this(DEFAULT_TARGET_SCORE);
@@ -76,7 +81,8 @@ public class Flip7Core {
 
     /**
      * Records a card for a player. A duplicate number card busts the player unless
-     * they hold a SECOND_CHANCE, which is consumed instead.
+     * they hold a SECOND_CHANCE, which is consumed instead. Reaching Flip 7 does not
+     * end the round; the player simply cannot take more number cards.
      */
     public CardResult addCard(String name, Cards card) {
         if (card == null) {
@@ -84,40 +90,56 @@ public class Flip7Core {
         }
         Player p = activePlayer(name);
 
+        if (card.isNumber() && p.hasFlip7()) {
+            throw new IllegalStateException(name + " already has a Flip 7");
+        }
+
         if (card.isNumber() && p.hasCard(card)) {
             if (p.consumeSecondChance()) {
                 return CardResult.SECOND_CHANCE_USED;
             }
             p.addToHand(card); // kept so the history shows what caused the bust
             p.bust();
-            endRoundIfOver();
             return CardResult.BUSTED;
         }
 
         p.addToHand(card);
 
         if (p.hasFlip7()) {
-            finishRound();
             return CardResult.FLIP_7;
         }
         if (card == Cards.FREEZE) {
             p.stay();
-            endRoundIfOver();
             return CardResult.FROZEN;
         }
         return CardResult.ADDED;
     }
 
-    /** Player banks their hand and is out for the rest of the round. */
+    /** Removes one copy of a card from an active player's hand (corrects a mistaken entry). */
+    public void removeCard(String name, Cards card) {
+        if (card == null) {
+            throw new IllegalArgumentException("Card must not be null");
+        }
+        Player p = activePlayer(name);
+        if (!p.removeFromHand(card)) {
+            throw new IllegalArgumentException(name + " does not have " + card);
+        }
+    }
+
+    /** Player banks their hand and takes no more cards this round. */
     public void stay(String name) {
         activePlayer(name).stay();
-        endRoundIfOver();
     }
 
     /** Player busts: their round score is 0. This is the primary way busts are reported. */
     public void bust(String name) {
         activePlayer(name).bust();
-        endRoundIfOver();
+    }
+
+    /** Undoes a stay or bust so the player is active again for the current round. */
+    public void reopen(String name) {
+        requireGameInProgress();
+        getPlayer(name).reopen();
     }
 
     public void action(String name, Action action) {
@@ -128,6 +150,37 @@ public class Flip7Core {
             case STAY: stay(name); break;
             case BUST: bust(name); break;
         }
+    }
+
+    /**
+     * Banks the current round for every player (players still active bank whatever
+     * they hold, busted players score 0), then either ends the game or starts the
+     * next round. This is the only way a round advances.
+     */
+    public void nextRound() {
+        requireGameInProgress();
+        if (players.isEmpty()) {
+            throw new IllegalStateException("No players");
+        }
+        for (Player p : players) {
+            p.finishRound();
+        }
+        winner = findWinner(true);
+        if (winner != null) {
+            gameOver = true;
+        } else {
+            round++;
+        }
+    }
+
+    /**
+     * Ends the game immediately without banking the current round. The winner is
+     * the player with the highest score; if the top score is tied there is no winner.
+     */
+    public void endGame() {
+        requireGameInProgress();
+        winner = findWinner(false);
+        gameOver = true;
     }
 
     // ---- queries ----
@@ -149,6 +202,25 @@ public class Flip7Core {
         return round;
     }
 
+    /** Number of rounds that have been banked. */
+    public int getRoundsPlayed() {
+        return players.isEmpty() ? 0 : players.get(0).getScoreHistory().size();
+    }
+
+    /** True when no player is still active or someone has a Flip 7. Informational only. */
+    public boolean isRoundComplete() {
+        boolean anyActive = false;
+        for (Player p : players) {
+            if (p.hasFlip7()) {
+                return true;
+            }
+            if (p.isActive()) {
+                anyActive = true;
+            }
+        }
+        return !anyActive;
+    }
+
     public int getTargetScore() {
         return targetScore;
     }
@@ -162,9 +234,10 @@ public class Flip7Core {
     }
 
     public boolean isGameOver() {
-        return winner != null;
+        return gameOver;
     }
 
+    /** The winner, or empty while the game is running or if it ended in a tie. */
     public Optional<Player> getWinner() {
         return Optional.ofNullable(winner);
     }
@@ -204,27 +277,8 @@ public class Flip7Core {
         return false;
     }
 
-    private void endRoundIfOver() {
-        for (Player p : players) {
-            if (p.isActive()) {
-                return;
-            }
-        }
-        finishRound();
-    }
-
-    /** Scores everyone (busted players score 0), then either ends the game or starts the next round. */
-    private void finishRound() {
-        for (Player p : players) {
-            p.finishRound();
-        }
-        winner = findWinner();
-        if (winner == null) {
-            round++;
-        }
-    }
-
-    private Player findWinner() {
+    /** Sole leader, or null on a tie at the top or (if required) below the target. */
+    private Player findWinner(boolean requireTarget) {
         int best = Integer.MIN_VALUE;
         Player leader = null;
         boolean tied = false;
@@ -237,6 +291,9 @@ public class Flip7Core {
                 tied = true;
             }
         }
-        return (best >= targetScore && !tied) ? leader : null;
+        if (tied || (requireTarget && best < targetScore)) {
+            return null;
+        }
+        return leader;
     }
 }

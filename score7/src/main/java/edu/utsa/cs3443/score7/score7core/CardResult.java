@@ -1,4 +1,4 @@
-package score7core;
+package edu.utsa.cs3443.score7.score7core;
 
 /** What happened as a result of {@link Flip7Core#addCard}. */
 public enum CardResult {
