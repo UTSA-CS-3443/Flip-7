@@ -31,6 +31,7 @@ public class SceneManager extends Application {
 //    private static final double WIDTH = 360;
 //    private static final double HEIGHT = 720;
 
+    /** Desktop-sized window. */
     private static final double WIDTH = 1280;
     private static final double HEIGHT = 720;
 
