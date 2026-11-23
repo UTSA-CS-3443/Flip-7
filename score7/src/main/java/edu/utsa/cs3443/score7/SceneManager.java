@@ -28,7 +28,10 @@ public class SceneManager extends Application {
     public static final String HISTORY = "history-view.fxml";
 
     /** Phone-sized window. */
-    private static final double WIDTH = 360;
+//    private static final double WIDTH = 360;
+//    private static final double HEIGHT = 720;
+
+    private static final double WIDTH = 1280;
     private static final double HEIGHT = 720;
 
     private static Stage stage;
