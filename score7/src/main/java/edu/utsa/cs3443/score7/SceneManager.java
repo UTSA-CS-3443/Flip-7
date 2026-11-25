@@ -8,6 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import javafx.stage.Screen;
+import javafx.geometry.Rectangle2D;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -32,8 +34,8 @@ public class SceneManager extends Application {
 //    private static final double HEIGHT = 720;
 
     /** Desktop-sized window. */
-    private static final double WIDTH = 1280;
-    private static final double HEIGHT = 720;
+    private static double WIDTH = 1280;
+    private static double HEIGHT = 720;
 
     private static Stage stage;
     private static Flip7Core game;
@@ -62,9 +64,21 @@ public class SceneManager extends Application {
         } catch (IOException e) {
             throw new UncheckedIOException("Could not load " + fxml, e);
         }
+
+        Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+
+        //set Stage boundaries to visible bounds of the main screen
         Scene scene = new Scene(root, WIDTH, HEIGHT);
+
         scene.getStylesheets().add(SceneManager.class.getResource("style.css").toExternalForm());
         stage.setScene(scene);
+        stage.setX(primaryScreenBounds.getMinX());
+        stage.setY(primaryScreenBounds.getMinY());
+        stage.setWidth(primaryScreenBounds.getWidth());
+        stage.setHeight(primaryScreenBounds.getHeight());
+//        stage.setFullScreen(true);
+        stage.setMaximized(true);
+        stage.setResizable(true);
         return loader.getController();
     }
 
